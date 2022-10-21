@@ -21,6 +21,7 @@ def get_all_planets():
 
     #planet_dict = [planet_dict for planet in planets]
     #return jsonify(planet_dict), 200
+    #Kendall: [planet_to_dict(planet) for planet in planets]
 
     for planet in planets:
         planet_dict = {
