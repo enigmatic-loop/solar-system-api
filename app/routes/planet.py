@@ -6,13 +6,13 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["GET"])
 def get_all_planets():
-    result = []
 
     all_planets = Planet.query.all()
-    for planet in all_planets:
-        result.append(planet.to_dict())
 
-    return jsonify(result), 200
+    result_planet = [planet.to_dict() for planet in all_planets]
+
+    return jsonify(result_planet), 200
+
 
 def validate_planet(planet_id):
     try:
