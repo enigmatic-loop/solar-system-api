@@ -10,13 +10,8 @@ def get_all_planets():
 
     all_planets = Planet.query.all()
     for planet in all_planets:
-        # planet_dict = {
-        #     "id": planet.id,
-        #     "name": planet.name,
-        #     "description": planet.description,
-        #     "moon": planet.moon
-        # }
         result.append(planet.to_dict())
+
     return jsonify(result), 200
 
 def validate_planet(planet_id):
