@@ -62,7 +62,12 @@ def update_one_planet(planet_id):
         update_planet.description = request_body["description"]
         update_planet.moon = request_body["moon"]
     except:
-        return jsonify({"message": "Missing needed data"}), 400
+        if not update_planet.name:
+            return jsonify({"message": f"Planet name is missing"}), 400
+        elif not update_planet.description:
+            return jsonify({"message": f"Description is missing"}), 400
+        else:
+            return jsonify({"message": f"Planet moon is missing"}), 400
 
     db.session.commit()
 
