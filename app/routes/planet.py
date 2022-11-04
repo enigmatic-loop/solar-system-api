@@ -18,33 +18,29 @@ def get_all_planets():
     return jsonify(result_planet), 200
 
 
-def validate_planet(planet_id):
+def validate_planet(cls, model_id):
     try:
-        planet_id = int(planet_id)
+        model_id = int(model_id)
     except:
-        abort(make_response({"message": f"planet {planet_id} invalid"}, 400))
+        abort(make_response({"message": f"{cls.__name__} with id: {model_id} invalid"}, 400))
 
-    chosen_planet = Planet.query.get(planet_id)
+    chosen_model = cls.query.get(model_id)
 
-    if chosen_planet is None:
-        abort(make_response({"message": f"planet {planet_id} not found"}, 404))
+    if chosen_model is None:
+        abort(make_response({"message": f"{cls.__name__} with id: {model_id} not found"}, 404))
 
-    return chosen_planet
+    return chosen_model
 
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
-    planet = validate_planet(planet_id)
+    planet = validate_planet(Planet, planet_id)
     return jsonify(planet.to_dict()), 200
 
 @planets_bp.route("", methods=["POST"])
 def create_one_planet():
     request_body = request.get_json()
-    new_planet = Planet(
-        name = request_body['name'],
-        description = request_body['description'],
-        moon = request_body['moon']
-    )
+    new_planet = Planet.from_dict(request_body)
 
     db.session.add(new_planet)
     db.session.commit()
@@ -53,7 +49,7 @@ def create_one_planet():
 
 @planets_bp.route("/<planet_id>", methods=["PUT"])
 def update_one_planet(planet_id):
-    update_planet = validate_planet(planet_id)
+    update_planet = validate_planet(Planet, planet_id)
 
     request_body = request.get_json()
 
@@ -80,7 +76,7 @@ def update_one_planet(planet_id):
 
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
 def delete_one_planet(planet_id):
-    planet_to_delete = validate_planet(planet_id)
+    planet_to_delete = validate_planet(Planet, planet_id)
 
     request_body = request.get_json()
 
